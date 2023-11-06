@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Character | Star Wars</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="./css/app.css">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="./images/favicon/site.webmanifest">
+</head>
+<body>
+
+<main>
+    <!-- Site Logo - Start -->
+    <div class="logo">
+        <a href="./index.html">
+            <img width="204" height="108" src="./images/logo.svg" alt="Star Wars Logo">
+        </a>
+    </div>
+    <!-- Site Logo - End -->
+
+
+    <div id="character" class="single-page">
+
+        <!-- Film poster - Start -->
+        <div id="poster" class="single-poster"></div>
+        <!-- Film poster - End -->
+
+        <div>
+            <!-- Film details - Start -->
+            <div>
+                <h1 id="name"></h1>
+                <p>Gender: <span id="gender"></span></p>
+                <p>Birth year: <span id="birth_year"></span></p>
+                <p>Height: <span id="height"></span></p>
+                <p>Mass: <span id="mass"></span></p>
+                <p>Eye color: <span id="eye_color"></span></p>
+                <p>Hair color: <span id="hair_color"></span></p>
+                <p>Skin color: <span id="skin_color"></span></p>
+            </div>
+            <!-- Film details - End -->
+
+            <!-- Planets - Start -->
+            <div>
+                <h2>Homeworld</h2>
+                <p id="planets" class="links-container"></p>
+            </div>
+            <!-- Planets - End -->
+        </div>
+    </div>
+
+
+</main>
+
+<script>
+    var url = new URL(window.location.href);
+    var id = url.searchParams.get("id");
+
+    if (id) {
+        fetch(`https://www.swapi.tech/api/people/${id}`)
+            .then(res => res.json())
+            .then(data => showCharacter(data))
+            .catch(err => console.error(err))
+    }
+
+    function showCharacter(data) {
+
+        var filmId = data.result.uid;
+        var character = data.result.properties;
+
+        var posterImage = document.createElement('img');
+        posterImage.src = `./images/characters/${filmId}.jpg`;
+        posterImage.alt = "Character photo";
+        document.getElementById('poster').appendChild(posterImage);
+
+        document.getElementById('name').textContent = character.name;
+        document.getElementById('gender').textContent = character.gender;
+        document.getElementById('birth_year').textContent = character.birth_year;
+        document.getElementById('height').textContent = character.height;
+        document.getElementById('mass').textContent = character.mass;
+        document.getElementById('eye_color').textContent = character.eye_color;
+        document.getElementById('hair_color').textContent = character.hair_color;
+        document.getElementById('skin_color').textContent = character.skin_color;
+
+        // Homeworld
+        fetch(character.homeworld)
+            .then(res => res.json())
+            .then(data => showPlanetLink(data))
+            .catch(err => console.error(err));
+    }
+
+    function showPlanetLink(data) {
+        console.log(data)
+        var planetId = data.result.uid;
+        var planet = data.result.properties;
+        var planets = document.getElementById('planets');
+
+        var planetLink = document.createElement('a');
+        planetLink.href = `./planet.html?id=${planetId}`;
+        planetLink.textContent = planet.name;
+
+        planets.appendChild(planetLink);
+    }
+
+</script>
+
+</body>
+</html>
