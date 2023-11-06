@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Films | Star Wars</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="./css/app.css">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="./images/favicon/site.webmanifest">
+</head>
+<body>
+
+<main>
+    <!-- Site Logo - Start -->
+    <div class="logo">
+        <img width="204" height="108" src="./images/logo.svg" alt="Star Wars Logo">
+    </div>
+    <!-- Site Logo - End -->
+
+    <div>
+
+        <div id="films" class="film-cards card-container">
+
+        </div>
+
+        <div id="film">
+
+        </div>
+
+    </div>
+
+    <div></div>
+</main>
+
+<script>
+    var url = new URL(window.location.href);
+    var id = url.searchParams.get("id");
+
+    if (id) {
+        fetch(`https://www.swapi.tech/api/films/${id}/`)
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(err => console.error(err))
+    } else {
+        fetch("https://www.swapi.tech/api/films/")
+            .then(res => res.json())
+            .then(data => showFilms(data))
+            .catch(err => console.error(err))
+    }
+
+    function showFilms(data) {
+        var container = document.getElementById('films');
+
+        data.result.forEach(film => {
+
+            var card = document.createElement('div');
+            card.className = 'card';
+
+            var cardInner = document.createElement('div');
+            cardInner.className = 'card-inner';
+
+            var cardFront = document.createElement('div');
+            cardFront.className = 'card-front';
+
+            var poster = document.createElement('img');
+            poster.width = 400;
+            poster.height = 550;
+            poster.src = `./images/films/${film.uid}.jpg`;
+            poster.alt = "Film Poster";
+
+            var cardBack = document.createElement('div');
+            cardBack.className = 'card-back';
+
+            var cardTop = document.createElement('div');
+            cardTop.className = 'card-top';
+
+            var episode = document.createElement('p');
+            episode.textContent = `Episode ${film.properties.episode_id}`;
+
+            var releaseDate = document.createElement('p');
+            releaseDate.textContent = (new Date(film.properties.release_date + 'T00:00:00')).toLocaleDateString('en-us', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+
+            var title = document.createElement('h2');
+            title.textContent = film.properties.title;
+
+            var description = document.createElement('p');
+            description.className = 'card-main';
+            description.textContent = film.properties.opening_crawl;
+
+            var cardBottom = document.createElement('p');
+
+            var readMore = document.createElement('a');
+            readMore.href = `./films.html?id=${film.uid}`;
+            readMore.textContent = "Read more";
+
+            cardFront.appendChild(poster);
+            cardInner.appendChild(cardFront);
+
+            cardTop.appendChild(episode);
+            cardTop.appendChild(releaseDate);
+
+            cardBottom.appendChild(readMore);
+
+            cardBack.appendChild(cardTop);
+            cardBack.appendChild(title);
+            cardBack.appendChild(description);
+            cardBack.appendChild(cardBottom);
+
+            cardInner.appendChild(cardBack);
+            card.appendChild(cardInner);
+
+            container.appendChild(card);
+        });
+    }
+</script>
+
+</body>
+</html>
