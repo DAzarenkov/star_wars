@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Films | Star Wars</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="./css/app.css">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="./images/favicon/site.webmanifest">
+</head>
+<body>
+
+<main>
+    <!-- Site Logo - Start -->
+    <div class="logo">
+        <a href="./index.html">
+            <img width="204" height="108" src="./images/logo.svg" alt="Star Wars Logo">
+        </a>
+    </div>
+    <!-- Site Logo - End -->
+
+
+    <div id="film" class="single-page">
+
+        <!-- Film poster - Start -->
+        <div id="poster" class="single-poster"></div>
+        <!-- Film poster - End -->
+
+        <div>
+            <!-- Film details - Start -->
+            <div>
+                <h1 id="title"></h1>
+                <p id="episode"></p>
+                <p id="release_date"></p>
+                <p id="director"></p>
+                <p id="producer"></p>
+                <p id="description"></p>
+            </div>
+            <!-- Film details - End -->
+
+            <!-- Characters - Start -->
+            <div>
+                <h2>Characters</h2>
+                <p id="characters" class="links-container"></p>
+            </div>
+            <!-- Characters - End -->
+        </div>
+    </div>
+
+
+</main>
+
+<script>
+    var url = new URL(window.location.href);
+    var id = url.searchParams.get("id");
+
+    if (id) {
+        fetch(`https://www.swapi.tech/api/films/${id}`)
+            .then(res => res.json())
+            .then(data => showFilm(data))
+            .catch(err => console.error(err))
+    }
+
+    function showFilm(data) {
+
+        var filmId = data.result.uid;
+        var film = data.result.properties;
+
+        var posterImage = document.createElement('img');
+        posterImage.src = `./images/films/${filmId}.jpg`;
+        posterImage.alt = "Film poster";
+        document.getElementById('poster').appendChild(posterImage);
+
+        document.getElementById('title').textContent = film.title;
+        document.getElementById('episode').textContent = "Episode " + film.episode_id;
+        document.getElementById('release_date').textContent = "Release date: " + (new Date(film.release_date + 'T00:00:00')).toLocaleDateString('en-us', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+        document.getElementById('director').textContent = "Directors: " + film.director;
+        document.getElementById('producer').textContent = "Producers: " + film.producer;
+        document.getElementById('description').textContent = film.opening_crawl;
+
+        // Characters
+        film.characters.forEach(link => {
+            fetch(link)
+                .then(res => res.json())
+                .then(data => showCharacterLink(data))
+                .catch(err => console.error(err))
+        })
+    }
+
+    function showCharacterLink(data) {
+        var characterId = data.result.uid;
+        var character = data.result.properties;
+        var characters = document.getElementById('characters');
+
+        var characterLink = document.createElement('a');
+        characterLink.href = `./character.html?id=${characterId}`;
+        characterLink.textContent = character.name;
+
+        characters.appendChild(characterLink);
+    }
+
+</script>
+
+</body>
+</html>

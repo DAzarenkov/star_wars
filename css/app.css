@@ -367,7 +367,7 @@ body {
  */
 
 main {
-    padding: 16px;
+    padding: 16px 16px 50px;
 }
 
 .logo {
@@ -509,3 +509,68 @@ main {
     max-width: 1600px;
     margin: 0 auto;
 }
+
+/**
+ * Single page
+ */
+.single-page {
+    display: flex;
+    max-width: 1000px;
+    margin: 0 auto;
+    gap: 60px;
+}
+
+.single-poster {
+    min-width: 400px;
+}
+
+.links-container a {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    transition: border-color 0.5s ease;
+    padding: 3px 0;
+    margin: 0 3px;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+}
+
+.links-container a:hover,
+.links-container a:focus {
+    border-top-color: white;
+    border-bottom-color: white;
+}
+
+.links-container a:not(:last-child):after {
+    content: ",";
+}
+
+@media all and (max-width: 991px) {
+    .single-page {
+        display: block;
+        max-width: 450px;
+    }
+}
+
+@media all and (max-width: 430px) {
+    .single-page {
+        display: block;
+        max-width: 450px;
+    }
+
+    .single-poster {
+        min-width: auto;
+    }
+
+    .single-poster img {
+        max-width: 100%;
+    }
+}
+
+
+
+
+
+
+
+

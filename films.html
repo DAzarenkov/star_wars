@@ -22,40 +22,24 @@
 <main>
     <!-- Site Logo - Start -->
     <div class="logo">
-        <img width="204" height="108" src="./images/logo.svg" alt="Star Wars Logo">
+        <a href="./index.html">
+            <img width="204" height="108" src="./images/logo.svg" alt="Star Wars Logo">
+        </a>
     </div>
     <!-- Site Logo - End -->
 
-    <div>
+    <!-- Film list - Start -->
+    <div id="films" class="film-cards card-container"></div>
+    <!-- Film list - End -->
 
-        <div id="films" class="film-cards card-container">
-
-        </div>
-
-        <div id="film">
-
-        </div>
-
-    </div>
-
-    <div></div>
 </main>
 
 <script>
-    var url = new URL(window.location.href);
-    var id = url.searchParams.get("id");
 
-    if (id) {
-        fetch(`https://www.swapi.tech/api/films/${id}/`)
-            .then(res => res.json())
-            .then(data => console.log(data))
-            .catch(err => console.error(err))
-    } else {
-        fetch("https://www.swapi.tech/api/films/")
-            .then(res => res.json())
-            .then(data => showFilms(data))
-            .catch(err => console.error(err))
-    }
+    fetch("https://www.swapi.tech/api/films")
+        .then(res => res.json())
+        .then(data => showFilms(data))
+        .catch(err => console.error(err));
 
     function showFilms(data) {
         var container = document.getElementById('films');
@@ -103,7 +87,7 @@
             var cardBottom = document.createElement('p');
 
             var readMore = document.createElement('a');
-            readMore.href = `./films.html?id=${film.uid}`;
+            readMore.href = `./film.html?id=${film.uid}`;
             readMore.textContent = "Read more";
 
             cardFront.appendChild(poster);
@@ -125,6 +109,7 @@
             container.appendChild(card);
         });
     }
+
 </script>
 
 </body>
